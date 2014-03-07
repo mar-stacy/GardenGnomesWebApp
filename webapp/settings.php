@@ -15,23 +15,13 @@
 
    <!-- <h1>Profile Page</h1> -->
     <div id ="content-wrapper">
-		<div id="content" class="content-style">
-			<h5>View Statistics</h5><br/>
-			<p>Choose a metric:</p>
-			<form name="submitMetrics" action='statistics.php' method='post'>
-			 <select name="metrics">
-					  <option value='temp'>Temperature</option>
-					  <option value='humd'>Humidity</option>
-					  <option value='soil'>Soil Moisture</option>
-				</select>
-				<br>
-			  <input type='submit' value='Submit' style='width:90px;'>
-			</form>
+        <div id="content" class="content-style">
+		<h5>Configurations coming soon. </h5>
         </div>
     </div>
     
        <div id ="header-wrapper">
-			<img id="logo" src="../gpi_logo.jpg" alt="GPI">
+		<img id="logo" src="../gpi_logo.jpg" alt="GPI">
 
 		<div id="header" class="header-style">
             <h4><a href="main.php">&#8801; Home</a></h4>

@@ -28,11 +28,11 @@
 		<div id="header" class="header-style">
             <h4><a href="main.php">&#8801; Home</a></h4>
             <br>
-            <h4><a href="gpi_view.php?view=main">&#8801; Controls</a></h4>
+            <h4><a href="button.php">&#8801; Controls</a></h4>
             <br>
             <h4><a href="statistics.html">&#8801; Statistics</a></h4>
             <br>
-            <h4><a href="gpi_view.php?view=settings">&#8801; Settings</a></h4>
+            <h4><a href="settings.php">&#8801; Settings</a></h4>
             <br>
         </div>
         <div id="footer">
