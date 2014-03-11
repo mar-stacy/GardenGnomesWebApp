@@ -17,6 +17,8 @@
     <?php 
     $data = array();
     $metric = $_POST['metrics'];
+	$start_date = $_POST['start_date'];
+	echo "Start Date: " . $start_date;
     switch($metric){
       case "temp":
         $m_name = "Temperature";

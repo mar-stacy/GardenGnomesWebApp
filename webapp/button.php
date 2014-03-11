@@ -1,6 +1,7 @@
 <?php
-	$link = mysql_connect('mysql.eecs.ku.edu', 'drmullin', 'skl00ker', 'drmullin')
-	or die('Could not connect: ' . mysql_connect_error());
+ $dbconn = mysql_connect("mysql.eecs.ku.edu","drmullin", "skl00ker") or
+		    die('Could not connect: ' . mysql_error());
+		    mysql_select_db('drmullin') or die('Could not select database');
 ?>
 
 <script type="text/javascript"src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js">
@@ -30,6 +31,33 @@ $("#display").html(html).show();
 });
 });
 </script>
+<!--Light Switch-->
+<script type="text/javascript">
+$(document).ready(function(){
+$('#lightswitch').click(function(){
+var lightswitch=$('#lightswitch').val();
+if ($("#lightswitch:checked").length == 0)
+{
+var b=lightswitch;
+}
+else
+{
+var b="off";
+}
+
+$.ajax({
+type: "POST",
+url: "ajax2.php",
+data: "value="+b ,
+success: function(html){
+$("#display").html(html).show();
+}
+});
+
+});
+});
+</script>
+
 
 <script type="text/javascript">
 $(document).ready( function(){
@@ -60,6 +88,7 @@ $('.checkbox',parent).attr('checked', false);
 <body>
 <div id ="content-wrapper">
 	<div id="content" class="content-style">
+    <div id="sprinkler">
 		<h5> Sprinkler Status </h5>
 		<p> Click to switch the status </p>
 		<div class="onoffswitch" >
@@ -68,7 +97,7 @@ $('.checkbox',parent).attr('checked', false);
 
 				$query3=mysql_query("select * from GPIO_Pins where Pi=1");
 				$query4=mysql_fetch_array($query3);
-				if($query4['Water']=="off")
+				if($query4['Water']=='off')
 				{
 				echo "checked";
 				}
@@ -79,6 +108,29 @@ $('.checkbox',parent).attr('checked', false);
 			<div class="onoffswitch-switch"></div>
 			</label>
 		</div>
+		</div>
+    <br/><br/>
+    <div id="light">
+		<h5> Light Status </h5>
+		<p> Click to switch the status </p>
+		<div class="onoffswitch">
+			<input type="checkbox" name="lightswitch" class="onoffswitch-checkbox" id="lightswitch"
+			<?php
+
+				$query3=mysql_query("select Light from GPIO_Pins where Pi=1");
+				$query4=mysql_fetch_array($query3);
+				if($query4['Light']=='off')
+				{
+				echo "checked";
+				}
+				
+			?>>
+			<label class="onoffswitch-label" for="lightswitch">
+			<div class="onoffswitch-inner"></div>
+			<div class="onoffswitch-switch"></div>
+			</label>
+      </div>
+		</div>
 	</div>
 </div>
 <div id ="header-wrapper">
@@ -87,11 +139,11 @@ $('.checkbox',parent).attr('checked', false);
 		 <div id="header" class="header-style">
             <h4><a href="main.php">&#8801; Home</a></h4>
             <br>
-            <h4><a href="gpi_view.php?view=main">&#8801; Controls</a></h4>
+            <h4><a href="button.php">&#8801; Controls</a></h4>
             <br>
             <h4><a href="statistics.html">&#8801; Statistics</a></h4>
             <br>
-            <h4><a href="gpi_view.php?view=settings">&#8801; Settings</a></h4>
+            <h4><a href="settings.php">&#8801; Settings</a></h4>
             <br>
         </div>
         <div id="footer">

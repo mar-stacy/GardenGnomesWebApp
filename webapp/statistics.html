@@ -9,6 +9,28 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../css/css-frames-style.css" />
     <script src="../scripts/jquery.js"></script>
+	
+  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+  $(function() {
+    $( "#from" ).datepicker({
+      changeMonth: true,
+	  changeYear: true,
+      onClose: function( selectedDate ) {
+        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#to" ).datepicker({
+      changeMonth: true,
+	  changeYear: true,
+      onClose: function( selectedDate ) {
+        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+  });
+  </script>
 </head>
 
 <body>
@@ -20,13 +42,18 @@
 			<p>Choose a metric:</p>
 			<form name="submitMetrics" action='statistics.php' method='post'>
 			 <select name="metrics">
-					  <option value='temp'>Temperature</option>
-					  <option value='humd'>Humidity</option>
-					  <option value='soil'>Soil Moisture</option>
+					<option value='temp'>Temperature</option>
+					<option value='humd'>Humidity</option>
+					<option value='soil'>Soil Moisture</option>
 				</select>
-				<br>
+
+				<p>Choose date range:</p>
+				<input type="text" value='Start Date' name="start" id="from" >
+				<input type="text" value='End Date' name="end" id="to" >
+				<br><br>
 			  <input type='submit' value='Submit' style='width:90px;'>
 			</form>
+			
         </div>
     </div>
     
