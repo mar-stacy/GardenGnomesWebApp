@@ -9,6 +9,15 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../css/css-frames-style.css" />
     <script src="../scripts/jquery.js"></script>
+	
+  <style type="text/css"> 
+	  
+	label {
+			display: inline-block; 
+			width:10em;
+	}
+	</style>
+  
 </head>
 
 <body>
@@ -16,7 +25,22 @@
    <!-- <h1>Profile Page</h1> -->
     <div id ="content-wrapper">
         <div id="content" class="content-style">
-		<h5>Configurations coming soon. </h5>
+		<h5> Settings</h5>
+		<div style="padding:5%;">
+		<form name="submitSettings" action='settings.php' method='post'>
+			<label for='temp'>Set Temperature: </label>
+			<input type="text" name="temp" id="temp" placeholder="25">
+			<br/>
+			<label for='soil_moisture'>Set Soil Moisture Level: </label>
+			<input type="text" name="soil_moisture" id="soil_moisture" placeholder="40">
+			<br/>
+			<label for='humidity'>Set Ideal Temperature: </label>
+			<input type="text" name="humidity" id="humidity" placeholder="40">
+			<br/>
+			
+			<input type='submit' value='Submit' style='width:90px;'>
+		</form>
+		</div>
         </div>
     </div>
     

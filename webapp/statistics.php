@@ -17,8 +17,8 @@
     <?php 
     $data = array();
     $metric = $_POST['metrics'];
-	$start_date = $_POST['start_date'];
-	echo "Start Date: " . $start_date;
+	$start_date = $_POST['start'];
+  $end_date = $_POST['end'];
     switch($metric){
       case "temp":
         $m_name = "Temperature";
@@ -35,18 +35,38 @@
   
   		$link = mysqli_connect('mysql.eecs.ku.edu', 'drmullin', 'skl00ker', 'drmullin')
 			or die('Could not connect: ' . mysqli_connect_error());
-	$query = "SELECT  time, " . $metric . " FROM Data WHERE " . $metric . " <> 0 ORDER BY time DESC LIMIT 20 ;";
-	//$query = "SELECT * FROM Garden_Data;";
-	$result = mysqli_query($link, $query);
-	if(mysqli_num_rows($result) != 0){
-		  $count = 1;
-		  while ($row = mysqli_fetch_array($result)) {
-        $data[$count] = $row[1];
-        $count = $count + 1;
-		  }
+      
+     $query = "SELECT time, " . $metric . " FROM Data WHERE " . $metric . 
+                " <> 0 AND str_to_date(time, '%Y-%m-%d') >=  str_to_date('" . $start_date . "', '%m/%d/%Y') ORDER BY time desc LIMIT 30;";
+                
+			  /*    $query = "SELECT TIME, ROUND(AVG( temp ), 2)
+		FROM Data
+		WHERE temp <>0
+		AND STR_TO_DATE( TIME,  '%Y-%m-%d' ) >= STR_TO_DATE(  '03/12/2010',  '%m/%d/%Y' ) 
+		GROUP BY STR_TO_DATE( TIME,  '%Y-%m-%d' ) 
+		LIMIT 30";*/
+      $result = mysqli_query($link, $query);
+      if(mysqli_num_rows($result) != 0){
+          $count = 1;
+          while ($row = mysqli_fetch_array($result)) {
+            $data[$count] = $row[1];
+            $time_arr[$count] = $row[0];
+            $count = $count + 1;
+			
+          }
+		  		$avg = (min($data)+max($data))/2;
       }
+      else{
+      echo "Error.";
+        die();
+      }
+
+	
       ?>
-      <img src="metrics_graph.php?mydata=<?php echo urlencode(serialize($data)); ?>&metrics=<?php echo $m_name; ?>" />
+	  <form name='submitAvg' action='settings.php' method='post'>
+		<input type='hidden' name='avg' value=<?php echo $avg?>>
+	  </form>
+      <img src="metrics_graph.php?mydata=<?php echo urlencode(serialize($data)); ?>&time=<?php echo urlencode(serialize($time_arr)); ?>&metrics=<?php echo $m_name; ?>" />
     </div>
     </div>
     

@@ -17,9 +17,10 @@
   $(function() {
     $( "#from" ).datepicker({
       changeMonth: true,
-	  changeYear: true,
+      changeYear: true,
       onClose: function( selectedDate ) {
         $( "#to" ).datepicker( "option", "minDate", selectedDate );
+		
       }
     });
     $( "#to" ).datepicker({
@@ -48,8 +49,10 @@
 				</select>
 
 				<p>Choose date range:</p>
-				<input type="text" value='Start Date' name="start" id="from" >
-				<input type="text" value='End Date' name="end" id="to" >
+				<label for="from">From</label>
+				<input type="text" name="start" id="from">
+				<label for="to">to</label>
+				<input type="text" name="end" id="to">
 				<br><br>
 			  <input type='submit' value='Submit' style='width:90px;'>
 			</form>
