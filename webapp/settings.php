@@ -10,14 +10,25 @@
     <link rel="stylesheet" type="text/css" href="../css/css-frames-style.css" />
     <script src="../scripts/jquery.js"></script>
 	
-  <style type="text/css"> 
-	  
-	label {
+	<style type="text/css"> 
+		label {
 			display: inline-block; 
 			width:10em;
-	}
+		}
 	</style>
   
+	<script type="text/javascript">
+	function showValue(newValue)
+	{
+		document.getElementById("range").innerHTML=newValue;
+	}
+	</script>
+			
+	<script type="text/javascript">
+	function updateTextInput(id, val) {
+		document.getElementById(id).value=val; 
+	}
+	</script>
 </head>
 
 <body>
@@ -28,17 +39,61 @@
 		<h5> Settings</h5>
 		<div style="padding:5%;">
 		<form name="submitSettings" action='settings.php' method='post'>
-			<label for='temp'>Set Temperature: </label>
-			<input type="text" name="temp" id="temp" placeholder="25">
-			<br/>
-			<label for='soil_moisture'>Set Soil Moisture Level: </label>
-			<input type="text" name="soil_moisture" id="soil_moisture" placeholder="40">
-			<br/>
-			<label for='humidity'>Set Ideal Temperature: </label>
-			<input type="text" name="humidity" id="humidity" placeholder="40">
+						
+			<label>Raspberry PI ID: </label>
+			<select name="ids">
+				<option value="PI1">1</option>
+				<option value="PI2">2</option>
+				<option value="PI3">3</option>
+			</select>
 			<br/>
 			
+			<input type="checkbox" value="automated" checked>Automate garden
+			<br/><br/><br/>
+				
+			<label for='temp'>Set Temperature (°F): </label>
+			<input type="text" name="temp" id="temp" value="" placeholder="70">  60
+			<input type="range" name="temp_slider" min="60" max="80" value="70" onchange="updateTextInput('temp', this.value)">  80                                                     
+			<br/>
+			
+			<label for='soil_moisture'>Set Soil Moisture Level: </label>
+			<input type="text" name="soil_moisture" value="" id="soil_moisture" placeholder="40">  0
+			<input type="range" name="moisture_slider" min="0" max="100" value="50" onchange="updateTextInput('soil_moisture', this.value)">  100                 
+			<br/>
+			
+			<label for='humidity'>Set Humidity: </label>
+			<input type="text" name="humidity" value="" id="humidity" placeholder="40">  0
+			<input type="range" name="humidity_slider" min="0" max="100" value="50" onchange="updateTextInput('humidity', this.value)">  100                
+			<br/><br/><br/>
+			
+			Select Days:<br>
+			<input type="radio" value="weekly" checked>Weekly
+			<input type="checkbox" value="sunday">Sun
+			<input type="checkbox" value="monday">Mon
+			<input type="checkbox" value="tuesday">Tues
+			<input type="checkbox" value="wednesday">Wed
+			<input type="checkbox" value="thursday">Thurs
+			<input type="checkbox" value="friday">Fri
+			<input type="checkbox" value="saturday">Sat
+			<br/><br/>
+			
+			Start Time:
+			<input type="text" id="timeHours" value=""> :
+			<input type="text" id="timeMinutes" value=""> (hh:mm)
+			<br/><br/>
+			
+			Run Every:
+			<input type="text" id="runHours" value=""> Hours
+			<input type="text" id="runMinutes" value=""> Minutes
+			<br/><br/>
+			
+			Duration:
+			<input type="text" id="durHours" value=""> Minutes
+			<input type="text" id="durMinutes" value=""> Seconds
+			<br/><br/><br/><br/>
+			
 			<input type='submit' value='Submit' style='width:90px;'>
+			<input type='submit' value='Cancel' style='width:90px;'>
 		</form>
 		</div>
         </div>
