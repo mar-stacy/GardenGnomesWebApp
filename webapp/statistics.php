@@ -1,5 +1,5 @@
-
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>The Garden Pi</title>
@@ -9,117 +9,102 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../css/css-frames-style.css" />
     <script src="../scripts/jquery.js"></script>
+	
+  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+  $(function() {
+    $( "#from" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      onClose: function( selectedDate ) {
+        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+		
+      }
+    });
+    $( "#to" ).datepicker({
+      changeMonth: true,
+	  changeYear: true,
+      onClose: function( selectedDate ) {
+        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+  });
+  </script>
 </head>
-<body link="#B8B8B8" vlink="#B8B8B8">
-  
-  <div id ="content-wrapper">
-    <div id="content" class="content-style">	
-    <?php 
-    $data = array();
-    $metric = $_POST['metrics'];
-	$gran = $_POST['granularity'];
-	$start_date = $_POST['start'];
-	$end_date = $_POST['end'];
-	
-    switch($metric){
-      case "temp":
-        $m_name = "Temperature";
-        break;
-      case "soil":
-        $m_name = "Soil Moisture";
-        break;
-      case "humd":
-        $m_name = "Humidity";
-        break;
-      default:
-        break;
-    }
-	
-	   switch ($gran){
-            case "hour": 
-              $gran_val = 13;
-              break;
-            case "day":
-              $gran_val = 10;
-              break;
-            case "month":
-              $gran_val = 7;
-              break;
-            case "year":
-              $gran_val = 4;
-              break;
-            default:
-              $gran_val = 0;
-              break;
-          }
-	
-  
-  		$link = mysqli_connect('mysql.eecs.ku.edu', 'drmullin', 'skl00ker', 'drmullin')
-			or die('Could not connect: ' . mysqli_connect_error());
-      
-	  
 
-		$query = "SELECT SUBSTR( TIME, 1, " . $gran_val . " ) as TIME, ROUND(AVG( " . $metric . " ), 2) AS " . $metric . "
-              FROM Data
-              WHERE " . $metric . " <>0
-              AND STR_TO_DATE( TIME,  '%Y-%m-%d' ) >= STR_TO_DATE( '" .$start_date. "' ,  '%m/%d/%Y' ) 
-              AND STR_TO_DATE( TIME,  '%Y-%m-%d' ) <= STR_TO_DATE( '" .$end_date. "' ,  '%m/%d/%Y' ) 
-              GROUP BY SUBSTR( TIME, 1, " . $gran_val . " )"; 
+<body>
 
-    /* $query = "SELECT time, " . $metric . " FROM Data WHERE " . $metric . 
-                " <> 0 AND str_to_date(time, '%Y-%m-%d') >=  str_to_date('" . $start_date . "', '%m/%d/%Y') ORDER BY time desc LIMIT 30;";
-      */ 
-			  /*    $query = "SELECT TIME, ROUND(AVG( temp ), 2)
-		FROM Data
-		WHERE temp <>0
-		AND STR_TO_DATE( TIME,  '%Y-%m-%d' ) >= STR_TO_DATE(  '03/12/2010',  '%m/%d/%Y' ) 
-		GROUP BY STR_TO_DATE( TIME,  '%Y-%m-%d' ) 
-		LIMIT 30";*/
-      $result = mysqli_query($link, $query);
-      if(mysqli_num_rows($result) != 0){
-          $count = 0;
-          while ($row = mysqli_fetch_array($result)) {
-            $data[$count] = $row[1];
-            switch ($gran_val){
-                case 13: 
-                    $row[0] = substr($row[0], 5) . ":00";
-                    break;
-                case 10:
-                    $row[0] = substr($row[0], 5);
-                    break;
-                case 7: 
-                    $row[0] = substr($row[0], 5);
-                    $row[0] = date('F', mktime(0,0,0,$row[0],10));
+   <!-- <h1>Profile Page</h1> -->
+    <div id ="content-wrapper">
+		<div id="content" class="content-style">
+			<h5>View Statistics</h5><br/>
+			<p>Choose a Raspberry Pi: </p>
+			<select name="pids">
+			<?php
+			  
+				$link = mysqli_connect('mysql.eecs.ku.edu', 'drmullin', 'skl00ker', 'drmullin')
+				or die('Could not connect: ' . mysqli_connect_error());
+				
+				$query = "SELECT pi FROM GPIO_Pins";
+				$result = mysqli_query($link, $query) or die(mysqli_error());
+				$result = mysqli_query($link, $query);
+				  if(mysqli_num_rows($result) > 0){
+					  while ($row = mysqli_fetch_assoc($result)) {
+				echo "<option value = '" . $row['pi'] . "'>" . $row['pi'] . "</option>\n";
+			  }
+			}else{
+			  echo "<script type='text/javascript'>";
+			  echo "alert('No Raspberry Pis have been set up')";
+			  echo "</script>";
+			}
+				
+			?>
+					<!--<option value="PI1">1</option>
+					<option value="PI2">2</option>
+					<option value="PI3">3</option>-->
+			</select>
+			<br/><br/>
+			<p>Choose a metric:</p>
+			<form name="submitMetrics" action='process_statistics.php' method='post'>
+			 <select name="metrics">
+					<option value='temp'>Temperature</option>
+					<option value='humd'>Humidity</option>
+					<option value='soil'>Soil Moisture</option>
+				</select>
+				<br><br> <p>Choose granularity:</p>
+				<select name="granularity">
+					<option value='hour'>By Hour</option>
+					<option value='day'>By Day</option>
+					<option value='month'>By Month</option>
+					<option value='year'>By Year</option>
+				</select>
+				<br><br>
+				<p>Choose date range:</p>
+				<label for="from">From</label>
+				<input type="text" name="start" id="from">
+				<label for="to">to</label>
+				<input type="text" name="end" id="to">
+				<br><br>
+			  <input type='submit' value='Submit' style='width:90px;'>
+			</form>
+			
+			
+			
 
-            }
-            $time_arr[$count] = $row[0];
-            $count = $count + 1;
-          }
-		  		$avg = (min($data)+max($data))/2;
-      }
-      else{
-      echo "Error.";
-        die();
-      }
-
-	
-      ?>
-	  <form name='submitAvg' action='settings.php' method='post'>
-		<input type='hidden' name='avg' value=<?php echo $avg?>>
-	  </form>
-    <img src="metrics_graph.php?mydata=<?php echo urlencode(serialize($data)); ?>&time=<?php echo urlencode(serialize($time_arr)); ?>&metrics=<?php echo $m_name; ?>" />
-    </div>
+        </div>
     </div>
     
        <div id ="header-wrapper">
 			<img id="logo" src="../gpi_logo.jpg" alt="GPI">
 
-		 <div id="header" class="header-style">
+		<div id="header" class="header-style">
             <h4><a href="main.php">&#8801; Home</a></h4>
             <br>
             <h4><a href="button.php">&#8801; Controls</a></h4>
             <br>
-            <h4><a href="statistics.html">&#8801; Statistics</a></h4>
+            <h4><a href="statistics.php">&#8801; Statistics</a></h4>
             <br>
             <h4><a href="settings.php">&#8801; Settings</a></h4>
             <br>
@@ -128,5 +113,7 @@
 			<!-- Insert footer info here -->
         </div>
     </div>
+
+
 </body>
 </html>

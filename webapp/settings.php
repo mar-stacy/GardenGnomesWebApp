@@ -38,13 +38,32 @@
         <div id="content" class="content-style">
 		<h5> Settings</h5>
 		<div style="padding:5%;">
-		<form name="submitSettings" action='settings.php' method='post'>
+		<form name="submitSettings" action='process_settings.php' method='post'>
 						
 			<label>Raspberry PI ID: </label>
-			<select name="ids">
-				<option value="PI1">1</option>
+			<select name="pids">
+        <?php
+          
+            $link = mysqli_connect('mysql.eecs.ku.edu', 'drmullin', 'skl00ker', 'drmullin')
+            or die('Could not connect: ' . mysqli_connect_error());
+            
+            $query = "SELECT pi FROM GPIO_Pins";
+            $result = mysqli_query($link, $query) or die(mysqli_error());
+            $result = mysqli_query($link, $query);
+			  if(mysqli_num_rows($result) > 0){
+				  while ($row = mysqli_fetch_assoc($result)) {
+            echo "<option value = '" . $row['pi'] . "'>" . $row['pi'] . "</option>\n";
+          }
+        }else{
+          echo "<script type='text/javascript'>";
+          echo "alert('No Raspberry Pis have been set up')";
+          echo "</script>";
+        }
+            
+        ?>
+				<!--<option value="PI1">1</option>
 				<option value="PI2">2</option>
-				<option value="PI3">3</option>
+				<option value="PI3">3</option>-->
 			</select>
 			<br/>
 			
@@ -57,13 +76,9 @@
 			<br/>
 			
 			<label for='soil_moisture'>Set Soil Moisture Level: </label>
-			<input type="text" name="soil_moisture" value="" id="soil_moisture" placeholder="40">  0
-			<input type="range" name="moisture_slider" min="0" max="100" value="50" onchange="updateTextInput('soil_moisture', this.value)">  100                 
-			<br/>
-			
-			<label for='humidity'>Set Humidity: </label>
-			<input type="text" name="humidity" value="" id="humidity" placeholder="40">  0
-			<input type="range" name="humidity_slider" min="0" max="100" value="50" onchange="updateTextInput('humidity', this.value)">  100                
+			<input type="text" name="soil_moisture" value="" id="soil_moisture" placeholder="40">  300
+			<input type="range" name="moisture_slider" min="300" max="700" value="50" onchange="updateTextInput('soil_moisture', this.value)">  700                 
+
 			<br/><br/><br/>
 			
 			Select Days:<br>
@@ -107,7 +122,7 @@
             <br>
             <h4><a href="button.php">&#8801; Controls</a></h4>
             <br>
-            <h4><a href="statistics.html">&#8801; Statistics</a></h4>
+            <h4><a href="statistics.php">&#8801; Statistics</a></h4>
             <br>
             <h4><a href="settings.php">&#8801; Settings</a></h4>
             <br>

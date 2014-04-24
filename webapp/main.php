@@ -30,7 +30,7 @@
             <br>
             <h4><a href="button.php">&#8801; Controls</a></h4>
             <br>
-            <h4><a href="statistics.html">&#8801; Statistics</a></h4>
+            <h4><a href="statistics.php">&#8801; Statistics</a></h4>
             <br>
             <h4><a href="settings.php">&#8801; Settings</a></h4>
             <br>
